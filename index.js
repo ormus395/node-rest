@@ -6,10 +6,11 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const multer = require("multer");
 const { v4: uuidv4 } = require("uuid");
+const mongoose = require("mongoose");
 
 //Routes and other dev made middleware imports
 const feedRoutes = require("./routes/feed");
-const mongoose = require("mongoose");
+const authRoutes = require("./routes/auth");
 
 const app = express();
 const port = 8080;
@@ -54,16 +55,14 @@ app.use((req, res, next) => {
 });
 
 app.use("/feed", feedRoutes);
-
-app.use((req, res, next) => {
-  res.json({ message: "The resource does not exist" });
-});
+app.use("/auth", authRoutes);
 
 app.use((error, req, res, next) => {
   console.log(error);
   res.status(error.statusCode).json({
     message: error.message,
     error: error.toString(),
+    data: error.data,
   });
 });
 
